@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m py_compile scripts/grandstream_client.py scripts/downloadRecords.py scripts/sync.py scripts/generate_files_list.py)",
+      "Bash(python3 scripts/sync.py)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -m py_compile scripts/grandstream_client.py)",
+      "Bash(kill 40026)",
+      "Bash(python3 -m py_compile scripts/generate_files_list.py scripts/downloadRecords.py)",
+      "Bash(timeout 590 python3 scripts/downloadRecords.py)",
+      "Read(//private/tmp/**)",
+      "Bash(ps aux *)",
+      "Bash(awk -F'] ' '{print $2}' /tmp/dl_run2.log)",
+      "Bash(awk '{print $1}')",
+      "Bash(grep \"OK\" /tmp/dl_run2.log)",
+      "Bash(awk '{print $3}')",
+      "Bash(python3 scripts/generate_files_list.py)",
+      "Bash(python3 scripts/downloadRecords.py > /tmp/dl_run3.log 2>&1)",
+      "Bash(kill 63083)",
+      "Bash(python3 scripts/downloadRecords.py > /tmp/dl_run4.log 2>&1)",
+      "Bash(tail -5 /tmp/dl_run4.log 2>/dev/null; echo \"---\"; ps aux | grep downloadRecords | grep -v grep || echo \"TUGADI\")",
+      "Bash(tail -6 /tmp/dl_run4.log; echo \"---\"; ps aux | grep downloadRecords | grep -v grep || echo \"TUGADI\")",
+      "Bash(cat /tmp/dl_run4.log)",
+      "Bash(awk -F'] ' '{print $2}' /Users/davron/.claude/projects/-Volumes-davron-AI-call24/cff81dab-1211-4f9d-b8d1-9cf0dbb7cab6/tool-results/bewpj452p.txt)",
+      "Bash(ping -c 3 grandstream.realsoft.uz)",
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}, vaqt: %{time_total}s\\\\n\" --connect-timeout 10 -k https://grandstream.realsoft.uz/cgi)",
+      "Bash(python3 -m py_compile scripts/downloadRecords.py)",
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}\\\\n\" --connect-timeout 8 -k https://grandstream.realsoft.uz/cgi)",
+      "Bash(python3 scripts/sync.py > /tmp/sync_run1.log 2>&1)",
+      "Bash(tail -15 /tmp/sync_run1.log 2>/dev/null; echo \"---status---\"; ps aux | grep sync.py | grep -v grep || echo \"TUGADI\")",
+      "Bash(pkill -f \"python3 scripts/sync.py\")",
+      "Bash(FILES_LIST=/Volumes/davron/AI/call24/data/files_july.txt python3 scripts/downloadRecords.py > /tmp/dl_july.log 2>&1)",
+      "Bash(python3 -m py_compile scripts/sync.py scripts/downloadRecords.py)",
+      "Bash(tail -3 /tmp/dl_july.log *)",
+      "Bash(head -20 /tmp/dl_july.log)",
+      "Bash(FILES_LIST=/Volumes/davron/AI/call24/data/files_july.txt python3 scripts/downloadRecords.py > /tmp/dl_july2.log 2>&1)",
+      "Bash(tail -5 /tmp/dl_july2.log *)",
+      "Skill(update-config)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
+    ]
+  }
+}

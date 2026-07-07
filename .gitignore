@@ -1,0 +1,4 @@
+.env
+recordings/
+downloaded.log
+data/files.txt
