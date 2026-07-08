@@ -2,4 +2,7 @@
 recordings/
 downloaded.log
 data/files.txt
+data/Master.csv
+data/Master.csv.bak
+data/last_synced.txt
 .claude/
