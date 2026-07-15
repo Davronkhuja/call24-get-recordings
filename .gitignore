@@ -1,8 +1,10 @@
 .env
 recordings/
 downloaded.log
+sync.log
 data/files.txt
 data/Master.csv
 data/Master.csv.bak
 data/last_synced.txt
 .claude/
+__pycache__/
