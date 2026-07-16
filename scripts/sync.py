@@ -19,7 +19,7 @@ import downloadRecords as dr
 DATA_DIR = os.path.join(PROJECT_DIR, "data")
 MASTER_CSV = os.path.join(DATA_DIR, "Master.csv")
 LAST_SYNCED_FILE = os.path.join(DATA_DIR, "last_synced.txt")
-LOOKBACK_DAYS = 2  # kunlar kech to'ldirilishi mumkinligi uchun ortga qarab tekshirish
+LOOKBACK_DAYS = 1  # kecha + bugun tekshirish kifoya
 
 
 def read_last_synced():
