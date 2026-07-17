@@ -3,11 +3,10 @@
 #   1) UCM'da CDR faylini yangilaydi (reloadCDRRecordFile)
 #   2) Yangi CDR CSV'ni yuklab oladi va data/Master.csv'ni yangilaydi (eskisi .bak'ga saqlanadi)
 #   3) files.txt'ni yangi Master.csv bilan birlashtiradi (eski yozuvlar saqlanadi)
-#   4) Faqat oxirgi marta sinxronlangan sanadan hozirgacha bo'lgan recording'larni
-#      yuklab oladi (eski sanalar har safar qayta urinilmaydi — data/last_synced.txt'da saqlanadi)
+#   4) Recordings papkasidagi oxirgi mavjud sanadan boshlab yangi fayllarni yuklab oladi
 #
 # Ishga tushirish: python3 scripts/sync.py
-import datetime, os, sys, shutil, time
+import datetime, glob, os, sys, shutil, time
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPT_DIR)
@@ -16,22 +15,18 @@ from grandstream_client import build_session, BASE, PROJECT_DIR
 import generate_files_list as gfl
 import downloadRecords as dr
 
-DATA_DIR = os.path.join(PROJECT_DIR, "data")
-MASTER_CSV = os.path.join(DATA_DIR, "Master.csv")
-LAST_SYNCED_FILE = os.path.join(DATA_DIR, "last_synced.txt")
-LOOKBACK_DAYS = 1  # kecha + bugun tekshirish kifoya
+DATA_DIR        = os.path.join(PROJECT_DIR, "data")
+RECORDINGS_DIR  = os.path.join(PROJECT_DIR, "recordings")
+MASTER_CSV      = os.path.join(DATA_DIR, "Master.csv")
 
 
-def read_last_synced():
-    if os.path.exists(LAST_SYNCED_FILE):
-        v = open(LAST_SYNCED_FILE, encoding="utf-8").read().strip()
-        return v or None
-    return None
-
-
-def write_last_synced(date_str):
-    with open(LAST_SYNCED_FILE, "w", encoding="utf-8") as f:
-        f.write(date_str + "\n")
+def last_recorded_date():
+    """recordings/ papkasidagi eng oxirgi YYYY-MM-DD papkasini qaytaradi."""
+    pattern = os.path.join(RECORDINGS_DIR, "????-??", "????-??-??")
+    day_dirs = [d for d in glob.glob(pattern) if os.path.isdir(d)]
+    if not day_dirs:
+        return None
+    return max(os.path.basename(d) for d in day_dirs)
 
 
 def refresh_cdr(session):
@@ -79,17 +74,12 @@ def main():
     print("3) files.txt eski ma'lumotlar bilan solishtirilib yangilanmoqda...")
     gfl.main()
 
-    last_synced = read_last_synced()
-    if last_synced:
-        lookback_dt = datetime.datetime.strptime(last_synced, "%Y-%m-%d") - datetime.timedelta(days=LOOKBACK_DAYS)
-        since_date = lookback_dt.strftime("%Y-%m-%d")
-        print(f"4) Yangi recordinglar yuklab olinmoqda (oxirgi sinxron: {last_synced}, {since_date} dan tekshiriladi)...")
+    since_date = last_recorded_date()
+    if since_date:
+        print(f"4) Yangi recordinglar yuklab olinmoqda (oxirgi mavjud sana: {since_date})...")
     else:
-        since_date = None
         print("4) Birinchi ishga tushirish — barcha recordinglar tekshiriladi...")
     dr.download_all(session, since_date=since_date)
-
-    write_last_synced(time.strftime("%Y-%m-%d"))
 
 
 if __name__ == "__main__":
